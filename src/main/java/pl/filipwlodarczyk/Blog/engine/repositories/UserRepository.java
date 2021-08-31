@@ -6,7 +6,7 @@ import pl.filipwlodarczyk.Blog.engine.models.User;
 
 import java.util.Optional;
 
-@Repository
+@Repository("user_repo")
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> selectApplicationUserByUsername(String username);
 }

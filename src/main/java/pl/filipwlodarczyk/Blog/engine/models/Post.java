@@ -8,7 +8,7 @@ public class Post {
 
     @Id
     @SequenceGenerator(name = "postId_sequence", sequenceName = "postId_sequence", allocationSize = 1)
-    @GeneratedValue(generator = "postId_sequence", strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "postId_sequence", strategy = GenerationType.SEQUENCE)
     private Long postId;
 
     @OneToOne(fetch = FetchType.LAZY)

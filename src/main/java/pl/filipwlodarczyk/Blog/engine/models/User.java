@@ -4,22 +4,24 @@ package pl.filipwlodarczyk.Blog.engine.models;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.filipwlodarczyk.Blog.engine.security.ApplicationPermission;
+import pl.filipwlodarczyk.Blog.engine.security.ApplicationRole;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+
+import static pl.filipwlodarczyk.Blog.engine.security.ApplicationRole.*;
 
 @Entity
 @Table(name = "users")
-@Getter
 public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(name = "userId_sequence", sequenceName = "userId_sequence", allocationSize = 1)
-    @GeneratedValue(generator = "userId_sequence", strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "userId_sequence", strategy = GenerationType.SEQUENCE)
     private Long userId;
     @Column
     private final String username;
@@ -30,30 +32,29 @@ public class User implements UserDetails {
     @Column
     private final Date dateOfBirth;
     @Column
-    private final boolean sex;
-    @Column
+    private final Sex sex;
     private final boolean isAccountNonExpired;
-    @Column
     private final boolean isAccountNonLocked;
-    @Column
     private final boolean isCredentialsNonExpired;
-    @Column
     private final boolean isEnabled;
 
-    @Column
-    private final Set<? extends GrantedAuthority> authorities;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    private Collection<? extends GrantedAuthority> authorities = new HashSet<>();
 
 
     public User(String username,
                 String password,
                 String email,
                 Date dateOfBirth,
-                boolean sex,
+                Sex sex,
                 boolean isAccountNonExpired,
                 boolean isAccountNonLocked,
                 boolean isCredentialsNonExpired,
                 boolean isEnabled,
-                Set<? extends GrantedAuthority> authorities) {
+                Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -100,4 +101,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return isEnabled;
     }
+
+
 }
